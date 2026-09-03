@@ -9,7 +9,7 @@ inputs:
       go
       go-junit-report
       golangci-lint
-      vulner
+      govulncheck
       yamllint
       yamlfix
       actionlint
