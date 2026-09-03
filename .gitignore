@@ -1,0 +1,5 @@
+coverage.out
+custom-golangci-lint
+.qodo
+coverage.*
+coverage.html
