@@ -13,6 +13,27 @@ linters:
     - vulner
   settings:
     custom:
+      distance:
+        type: module
+        description: Enforce Go main-sequence distance policy thresholds
+        settings:
+          tests: false
+          generated: false
+          dependency-scope: module
+          rules:
+            - pattern: '**'
+              max: 0.3
+      reusability:
+        type: module
+        description: Enforce Go type reusability policy thresholds
+        settings:
+          dependency-scope: module
+          field-usage: direct
+          rules:
+            - pattern: '**'
+              min: 0.80
+            - pattern: '**/*_test'
+              min: 0.0
       vulner:
         type: module
         description: Report reachable Go vulnerabilities
