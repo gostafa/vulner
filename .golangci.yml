@@ -9,10 +9,15 @@ linters:
     - testpackage
     - godot
     - exhaustruct
-  enable:
-    - vulner
+  enable: [reusability, distance, coverlint, vulner]
   settings:
     custom:
+      coverlint:
+        type: module
+        settings:
+          rules:
+            - pattern: '**'
+              min: 1.0
       distance:
         type: module
         description: Enforce Go main-sequence distance policy thresholds

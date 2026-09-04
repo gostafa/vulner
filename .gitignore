@@ -3,3 +3,6 @@ custom-golangci-lint
 .qodo
 coverage.*
 coverage.html
+.lint
+.task
+.cursor

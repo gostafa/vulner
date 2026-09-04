@@ -61,7 +61,7 @@ func Analyzer() *analysis.Analyzer {
 	scanner := govulnadapter.NewScanner(application.DefaultPackages)
 	service := application.NewService(locator, scanner)
 
-	return golangciadapter.NewAnalyzer(LinterName, service).Build()
+	return golangciadapter.Build(golangciadapter.NewAnalyzer(LinterName, service))
 }
 
 //nolint:revive // An empty map is the only supported plugin settings value.
