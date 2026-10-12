@@ -1,7 +1,7 @@
 # Vulner
 
 
-[![`Workflow for vulner Action`](https://github.com/gostafa/vulner/actions/workflows/main.yml/badge.svg)](https://github.com/gostafa/vulner/actions/workflows/main.yml) [![codecov](https://codecov.io/gh/gostafa/vulner/graph/badge.svg)](https://codecov.io/gh/gostafa/vulner) [![CodSpeed](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json)](https://app.codspeed.io/gostafa/vulner?utm_source=badge) [![LICENSE](https://img.shields.io/github/license/gostafa/vulner)](/LICENSE) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fgostafa%2Fvulner.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fgostafa%2Fvulner?ref=badge_shield)
+[![`Workflow for vulner Action`](https://github.com/gostafa/vulner/actions/workflows/main.yml/badge.svg)](https://github.com/gostafa/vulner/actions/workflows/main.yml) [![codecov](https://codecov.io/gh/gostafa/vulner/graph/badge.svg)](https://codecov.io/gh/gostafa/vulner) [![CodSpeed](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json)](https://app.codspeed.io/gostafa/vulner?utm_source=badge) [![LICENSE](https://img.shields.io/github/license/gostafa/vulner)](/LICENSE) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fgostafa%2Fvulner.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fgostafa%2Fvulner?ref=badge_shield) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fgostafa%2Fvulner.svg?type=shield&issueType=security)](https://app.fossa.com/projects/git%2Bgithub.com%2Fgostafa%2Fvulner?ref=badge_shield&issueType=security)
 
 
 `vulner` reports reachable Go vulnerabilities using `golang.org/x/vuln/scan`
