@@ -16,7 +16,7 @@ import (
 
 func registerVulner() int {
 	register.Plugin(Name, func(raw any) (register.LinterPlugin, error) {
-		pluginInstance, err := New(raw)
+		pluginInstance, err := newPlugin(raw)
 		if err != nil {
 			return nil, fmt.Errorf("registerVulner: %w", err)
 		}
@@ -27,18 +27,18 @@ func registerVulner() int {
 	return registerDone
 }
 
-// New constructs the module plugin. Vulner does not accept settings.
-func New(raw any) (Plugin, error) {
+// newPlugin constructs the module plugin. Vulner does not accept settings.
+func newPlugin(raw any) (linterPlugin, error) {
 	if !emptySettings(raw) {
-		return nil, fmt.Errorf("New: %w", errUnsupportedSettings)
+		return nil, fmt.Errorf("new plugin: %w", errUnsupportedSettings)
 	}
 
-	return Plugin(analyzerBuilder()), nil
+	return linterPlugin(analyzerBuilder()), nil
 }
 
 func analyzerBuilder() func() ([]*analysis.Analyzer, error) {
 	return func() ([]*analysis.Analyzer, error) {
-		return []*analysis.Analyzer{Analyzer()}, nil
+		return []*analysis.Analyzer{newAnalyzer()}, nil
 	}
 }
 
@@ -56,8 +56,8 @@ func emptySettingsMap(rawSettings any) bool {
 	return found && len(settings) == zeroValue
 }
 
-// Analyzer constructs the default vulnerability analyzer.
-func Analyzer() *analysis.Analyzer {
+// newAnalyzer constructs the default vulnerability analyzer.
+func newAnalyzer() *analysis.Analyzer {
 	locator := filesystem.NewModuleLocator()
 	scanner := govulnadapter.NewScanner(application.DefaultPackages)
 	service := application.NewService(locator, scanner)
@@ -66,7 +66,7 @@ func Analyzer() *analysis.Analyzer {
 }
 
 // BuildAnalyzers returns the configured analyzer for golangci-lint.
-func (build Plugin) BuildAnalyzers() ([]*analysis.Analyzer, error) {
+func (build linterPlugin) BuildAnalyzers() ([]*analysis.Analyzer, error) {
 	analyzers, err := build()
 	if err != nil {
 		return nil, fmt.Errorf(errBuildAnalyzers, err)
@@ -80,6 +80,6 @@ func (loadMode) value() string {
 }
 
 // GetLoadMode returns the golangci-lint package loading mode.
-func (Plugin) GetLoadMode() string {
+func (linterPlugin) GetLoadMode() string {
 	return loadMode{}.value()
 }

@@ -11,6 +11,6 @@ import (
 
 var (
 	errUnsupportedSettings                       = errors.New(unsupportedSettingsError)
-	_                      register.LinterPlugin = Plugin(nil)
+	_                      register.LinterPlugin = linterPlugin(nil)
 	_                                            = registerVulner()
 )

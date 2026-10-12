@@ -7,7 +7,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/gostafa/vulner/internal/vulnerability/standalone"
+	"github.com/gostafa/vulner"
 )
 
 func main() {
@@ -29,7 +29,7 @@ func mainRuntimeFrom(err error) mainRuntime {
 }
 
 func runStandalone(args []string) int {
-	return standalone.Run(args, os.Stdout, os.Stderr)
+	return vulner.Run(args, os.Stdout, os.Stderr)
 }
 
 func startRuntime(runtime mainRuntime, args []string) {

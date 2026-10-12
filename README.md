@@ -1,4 +1,4 @@
-# vulner
+# Vulner
 
 
 [![`Workflow for vulner Action`](https://github.com/gostafa/vulner/actions/workflows/main.yml/badge.svg)](https://github.com/gostafa/vulner/actions/workflows/main.yml)
@@ -23,7 +23,9 @@ go get github.com/gostafa/vulner@latest
 go install github.com/gostafa/vulner/cmd/vulner@latest
 ```
 
-The public API lives in `github.com/gostafa/vulner/plugin`.
+The public API lives in `github.com/gostafa/vulner`. Call `vulner.Run(args, stdout, stderr)`
+to run the standalone command. Import `github.com/gostafa/vulner/plugin` for
+golangci-lint registration.
 
 ### Run
 
@@ -37,7 +39,7 @@ vulner
 
 The command takes no arguments. Any flag or package pattern is a usage error.
 
-### Build from source
+### Build from Source
 
 ```bash
 git clone https://github.com/gostafa/vulner.git
@@ -47,7 +49,7 @@ go build -o ./bin/vulner ./cmd/vulner
 ./bin/vulner
 ```
 
-## Use as a golangci-lint plugin
+## Use as a Golangci-Lint Plugin
 
 The plugin must be included in a custom `golangci-lint` binary.
 
@@ -92,7 +94,7 @@ golangci-lint custom -v
 Always run the generated `custom-golangci-lint` binary. The standard
 `golangci-lint` binary does not include the plugin.
 
-## Exit codes
+## Exit Codes
 
 * `0`: success
 * `1`: check or write error

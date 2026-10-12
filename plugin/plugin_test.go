@@ -1,7 +1,7 @@
 // Gostafa 2026.
 // SPDX-License-Identifier: Apache-2.0.
 
-package plugin_test
+package plugin
 
 import (
 	"errors"
@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/golangci/plugin-module-register/register"
-	"github.com/gostafa/vulner/plugin"
 	"golang.org/x/tools/go/analysis"
 )
 
@@ -21,7 +20,7 @@ const (
 func TestNew(t *testing.T) {
 	t.Parallel()
 
-	plug, err := plugin.New(nil)
+	plug, err := newPlugin(nil)
 	assertNoPluginError(t, err)
 
 	analyzers := buildAnalyzersForTest(t, plug)
@@ -32,7 +31,7 @@ func TestNew(t *testing.T) {
 func TestNewSetsLoadMode(t *testing.T) {
 	t.Parallel()
 
-	plug, err := plugin.New(nil)
+	plug, err := newPlugin(nil)
 	assertNoPluginError(t, err)
 	assertLoadMode(t, plug)
 }
@@ -40,7 +39,7 @@ func TestNewSetsLoadMode(t *testing.T) {
 func TestNewRejectsSettings(t *testing.T) {
 	t.Parallel()
 
-	plug, err := plugin.New(map[string]any{"packages": "./cmd/..."})
+	plug, err := newPlugin(map[string]any{"packages": "./cmd/..."})
 	if err == nil {
 		t.Fatalf("expected an error, got %#v", plug)
 	}
@@ -49,7 +48,7 @@ func TestNewRejectsSettings(t *testing.T) {
 func TestNewRejectsNonMapSettings(t *testing.T) {
 	t.Parallel()
 
-	plug, err := plugin.New("not settings")
+	plug, err := newPlugin("not settings")
 	if err == nil {
 		t.Fatalf("expected an error, got %#v", plug)
 	}
@@ -58,39 +57,19 @@ func TestNewRejectsNonMapSettings(t *testing.T) {
 func TestNewAcceptsEmptySettings(t *testing.T) {
 	t.Parallel()
 
-	plug, err := plugin.New(map[string]any{})
+	plug, err := newPlugin(map[string]any{})
 	assertNoPluginError(t, err)
 
 	if plug == nil {
 		t.Fatal("nil plugin")
-	}
-}
-
-func TestPluginRegistration(t *testing.T) {
-	t.Parallel()
-
-	plug, err := registeredPlugin(t)(nil)
-	assertNoPluginError(t, err)
-
-	if plug == nil {
-		t.Fatal("nil plugin")
-	}
-}
-
-func TestRegisteredPluginWrapsSettingsError(t *testing.T) {
-	t.Parallel()
-
-	_, err := registeredPlugin(t)(map[string]any{"packages": "./cmd/..."})
-	if err == nil || !strings.Contains(err.Error(), "registerVulner") {
-		t.Fatalf("error = %v, want registerVulner wrapper", err)
 	}
 }
 
 func TestAnalyzerBuildsDefaultAnalyzer(t *testing.T) {
 	t.Parallel()
 
-	analyzer := plugin.Analyzer()
-	if analyzer == nil || analyzer.Name != plugin.Name || analyzer.Run == nil {
+	analyzer := newAnalyzer()
+	if analyzer == nil || analyzer.Name != Name || analyzer.Run == nil {
 		t.Fatalf("unexpected analyzer: %#v", analyzer)
 	}
 }
@@ -99,7 +78,7 @@ func TestBuildAnalyzersWrapsError(t *testing.T) {
 	t.Parallel()
 
 	want := errors.New("boom")
-	plug := plugin.Plugin(func() ([]*analysis.Analyzer, error) {
+	plug := linterPlugin(func() ([]*analysis.Analyzer, error) {
 		return nil, want
 	})
 
@@ -135,8 +114,8 @@ func assertAnalyzer(t *testing.T, analyzers []*analysis.Analyzer) {
 		t.Fatalf("analyzers = %#v, want one analyzer", analyzers)
 	}
 
-	if analyzers[firstAnalyzerIndex].Name != plugin.Name {
-		t.Fatalf("analyzer name = %q, want %q", analyzers[firstAnalyzerIndex].Name, plugin.Name)
+	if analyzers[firstAnalyzerIndex].Name != Name {
+		t.Fatalf("analyzer name = %q, want %q", analyzers[firstAnalyzerIndex].Name, Name)
 	}
 
 	if analyzers[firstAnalyzerIndex].Run == nil {
@@ -157,21 +136,39 @@ func assertBuildAnalyzersAgain(t *testing.T, plug register.LinterPlugin) {
 	}
 }
 
-func registeredPlugin(t *testing.T) register.NewPlugin {
-	t.Helper()
-
-	constructor, err := register.GetPlugin(plugin.Name)
-	if err != nil {
-		t.Fatalf("GetPlugin: %v", err)
-	}
-
-	return constructor
-}
-
 func assertNoPluginError(t *testing.T, err error) {
 	t.Helper()
 
 	if err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestEmptySettings(t *testing.T) {
+	t.Parallel()
+
+	if !emptySettings(nil) {
+		t.Fatal("emptySettings(nil) = false")
+	}
+
+	if !emptySettings(map[string]any{}) {
+		t.Fatal("emptySettings(empty map) = false")
+	}
+
+	if emptySettings(map[string]any{"packages": "./..."}) {
+		t.Fatal("emptySettings(non-empty map) = true")
+	}
+
+	if emptySettings("not settings") {
+		t.Fatal("emptySettings(string) = true")
+	}
+}
+
+func TestAnalyzerBuildsNamedAnalyzer(t *testing.T) {
+	t.Parallel()
+
+	analyzer := newAnalyzer()
+	if analyzer == nil || analyzer.Name != Name || analyzer.Run == nil {
+		t.Fatalf("unexpected analyzer: %#v", analyzer)
 	}
 }
