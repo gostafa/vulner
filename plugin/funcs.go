@@ -10,7 +10,9 @@ import (
 	"github.com/gostafa/vulner/internal/vulnerability/adapters/filesystem"
 	golangciadapter "github.com/gostafa/vulner/internal/vulnerability/adapters/golangci"
 	govulnadapter "github.com/gostafa/vulner/internal/vulnerability/adapters/govuln"
+	"github.com/gostafa/vulner/internal/vulnerability/adapters/resilience"
 	"github.com/gostafa/vulner/internal/vulnerability/application"
+	"github.com/gostafa/vulner/internal/vulnerability/domain"
 	"golang.org/x/tools/go/analysis"
 )
 
@@ -60,7 +62,7 @@ func emptySettingsMap(rawSettings any) bool {
 func newAnalyzer() *analysis.Analyzer {
 	locator := filesystem.NewModuleLocator()
 	scanner := govulnadapter.NewScanner(application.DefaultPackages)
-	service := application.NewService(locator, scanner)
+	service := application.NewService(locator, scanner, resilience.NewProvider[domain.ScanOutcome])
 
 	return golangciadapter.Build(golangciadapter.NewAnalyzer(Name, service))
 }

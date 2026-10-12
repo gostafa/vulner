@@ -39,6 +39,11 @@ vulner
 
 The command takes no arguments. Any flag or package pattern is a usage error.
 
+Transient I/O failures receive up to three attempts with exponential backoff and
+jitter. Permanent failures stop immediately. Each analyzer service reuses one scan
+per module and reports a terminal scan error once. Module metadata and source-file
+checks are cached within a run; subsequent runs use fresh caches.
+
 ## Use as a Golangci-Lint Plugin
 
 The plugin must be included in a custom `golangci-lint` binary.
