@@ -39,16 +39,6 @@ vulner
 
 The command takes no arguments. Any flag or package pattern is a usage error.
 
-### Build from Source
-
-```bash
-git clone https://github.com/gostafa/vulner.git
-cd vulner
-
-go build -o ./bin/vulner ./cmd/vulner
-./bin/vulner
-```
-
 ## Use as a Golangci-Lint Plugin
 
 The plugin must be included in a custom `golangci-lint` binary.
